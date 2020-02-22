@@ -1,14 +1,10 @@
-;Mike is trying a change
 (require 2htdp/image)
 (require 2htdp/universe)
-
-;this is a merge text
 
 (define EARTH .)
 
 (define FIRE .)
 
-; This is an update for testing purposes only.
 
 (define WIDTH-OF-WORLD 600)
 (define HEIGHT-OF-WORLD 750)
