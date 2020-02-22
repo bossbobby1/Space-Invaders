@@ -2,6 +2,8 @@
 (require 2htdp/image)
 (require 2htdp/universe)
 
+;this is a merge text
+
 (define EARTH .)
 
 (define FIRE .)
