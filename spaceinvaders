@@ -5,6 +5,8 @@
 
 (define FIRE .)
 
+; This is an update for testing purposes only.
+
 (define WIDTH-OF-WORLD 600)
 (define HEIGHT-OF-WORLD 750)
 (define BACKGROUND (place-image EARTH
