@@ -270,3 +270,7 @@
 
 
 (main (make-game empty (make-tank (/ WIDTH-OF-WORLD 2) 10) empty empty))
+
+; The links below were used as inspiration for our code:
+; https://github.com/djhornsb/space-invaders/blob/master/space-invaders.rkt
+; https://github.com/emaphis/HtDP2e-solutions/blob/master/1-Fixed-Size-Data/6-Itemizations-Structures/06_01_space_invader_2.rkt
