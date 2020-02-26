@@ -1,10 +1,10 @@
 ;This program was designed to simulate a Space Invaders style aracde game for learning the programming language Racket.
-;Designed by: Josh Blank, Mike King, Seth Howel, and Zach Hochstetler.
+;Designed by: Josh Blank, Mike King, Seth Howell, and Zach Hochstetler.
 
 ;Data description:
-     ;varibales represent locations
+     ;varibles represent locations
           ;example: x represents the location of the tank
-     ;Boolean represent true or false statements
+     ;booleans represent true or false statements
           ;example: grounded? u checks if ufo is hit or not
      ;speed is represented as pixels per tick
           ;example: the speed of the tank, ufos, and comets
