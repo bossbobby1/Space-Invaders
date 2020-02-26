@@ -73,8 +73,8 @@
 ; ufos is a struct composed of (make-ufos x(number) y(number) vel(number))
 (define-struct ufos [x y vel])
 
-; game is a struct composed of (make-game (list of ufos) tank (list of missiles))  **ADD SCORE AS 4th COMPONENT**
-(define-struct game [ufos tank missiles comets])
+; game is a struct composed of (make-game (list of ufos) tank (list of missiles))  **ADD SCORE AS 5th COMPONENT**
+(define-struct game [ufos tank missiles comets time])
 
 ; NUMBER/IMAGE -> IMAGE
 ; takes background and x coordinate and places tank on background at x coordinate and then returns background
@@ -106,11 +106,26 @@
 	[(empty? m) z]
 	[else (place-image COMET (posn-x (first m)) (posn-y (first m)) (render-comets (rest m) z))]))
 
+; NUM -> NUM
+; Returns time in seconds
+; (define (timeSeconds x))
+(define (timeSeconds x)
+  (cond
+    [(= (modulo x 28) 0) (/ x 28)]
+    [else (floor (/ x 28))]))
+
+; NUM -> IMAGE
+; renders time onto background
+; (define (renderTime m z))
+(define (renderTime m z)
+  (place-image (text (number->string (timeSeconds m)) 25 "white") (/ WIDTH-OF-WORLD 2) 20 z))
+
 ; struct -> IMAGE
 ; takes the tank, the ufos, and the missiles and places them on the background
 ; (define (render t))
 (define (render t)
- (render-tank (game-tank t) (render-ufos (game-ufos t) (render-missiles (game-missiles t) (render-comets (game-comets t) BACKGROUND)))))
+ (render-tank (game-tank t) (render-ufos (game-ufos t) (render-missiles (game-missiles t)
+              (render-comets (game-comets t) (renderTime (game-time t) BACKGROUND))))))
 
 ; struct/NUM -> struct
 ; creates the starting coordinates for a missile based on whether or not a missile is on screen
@@ -137,9 +152,9 @@
 ; (define (change i a-key))
 (define (change i a-key)
   (cond
-	[(key=? a-key "left")  (make-game (game-ufos i) (move-left (game-tank i)) (game-missiles i) (game-comets i))]
-	[(key=? a-key "right") (make-game (game-ufos i) (move-right (game-tank i)) (game-missiles i) (game-comets i))]
-	[(key=? a-key " ") (make-game (game-ufos i) (game-tank i) (missilefire (game-missiles i) (tank-loc (game-tank i))) (game-comets i))]
+	[(key=? a-key "left")  (make-game (game-ufos i) (move-left (game-tank i)) (game-missiles i) (game-comets i) (game-time i))]
+	[(key=? a-key "right") (make-game (game-ufos i) (move-right (game-tank i)) (game-missiles i) (game-comets i) (game-time i))]
+	[(key=? a-key " ") (make-game (game-ufos i) (game-tank i) (missilefire (game-missiles i) (tank-loc (game-tank i))) (game-comets i) (game-time i))]
 	[else i]))
 
 ; struct -> struct
@@ -205,7 +220,6 @@
 	[(< (random 150) (/ INVADE-RATE 3)) (cons (make-posn (random WIDTH-OF-WORLD) 0) i)]
 	[else i]))
 
-; This function was almost a direct copy from: https://github.com/djhornsb/space-invaders/blob/master/space-invaders.rkt
 ; list list -> list
 ; determines whether or not a ufo has been hit and then deletes it if so
 ; (define (destroy-invaders lom loi))
@@ -217,7 +231,6 @@
         	(rest loi)
         	(cons (first loi) (destroy-invaders lom (rest loi))))]))
 
-; This function was almost a direct copy from: https://github.com/djhornsb/space-invaders/blob/master/space-invaders.rkt
 ; struct list -> BOOLEAN
 ; returns true if a specific ufo has been hit and false if not
 ; (define (find-invader i lom))
@@ -229,12 +242,17 @@
         	true
         	(find-invader i (rest lom)))]))
 
+; NUM -> NUM
+; Increments time every 1/28th of a second
+; (define (incrementTime x))
+(define (incrementTime x) (+ x 1))
+
 ; struct -> struct
 ; updates ufos and missiles and creates and destroys ufos
 ; (define (update-game x))
 (define (update-game x)
   (make-game (destroy-invaders (game-missiles x) (create-ufo (advance-ufos (game-ufos x))))
-         	(game-tank x) (advance-missiles (game-missiles x)) (advance-comets (create-comet (game-comets x)))))
+         	(game-tank x) (advance-missiles (game-missiles x)) (advance-comets (create-comet (game-comets x))) (incrementTime (game-time x))))
 
 ; struct list -> BOOLEAN
 ; returns true if the tank has been hit by one of the falling comets
@@ -254,7 +272,7 @@
 (define (game-over g)
   (place-image (text/font "GAME OVER" 60 "red"
              #f 'modern 'normal 'bold #f)
- (/ WIDTH-OF-WORLD 2) (* .35 HEIGHT-OF-WORLD) G.O.BACKGROUND))
+ (/ WIDTH-OF-WORLD 2) (* .35 HEIGHT-OF-WORLD) (renderTime (game-time g) G.O.BACKGROUND)))
 
 ; list -> BOOLEAN
 ; checkes whether any ufos have been grounded
@@ -288,7 +306,7 @@
          	(stop-when end? game-over)))
 
 
-(main (make-game empty (make-tank (/ WIDTH-OF-WORLD 2) 10) empty empty))
+(main (make-game empty (make-tank (/ WIDTH-OF-WORLD 2) 10) empty empty 0))
 
 ; The links below were used as inspiration for our code:
 ; https://github.com/djhornsb/space-invaders/blob/master/space-invaders.rkt
