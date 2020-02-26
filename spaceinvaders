@@ -188,6 +188,7 @@
 	[(< (random 150) (/ INVADE-RATE 3)) (cons (make-posn (random WIDTH-OF-WORLD) 0) i)]
 	[else i]))
 
+; This function was almost a direct copy from: https://github.com/djhornsb/space-invaders/blob/master/space-invaders.rkt
 ; list list -> list
 ; determines whether or not a ufo has been hit and then deletes it if so
 ; (define (destroy-invaders lom loi))
@@ -199,6 +200,7 @@
         	(rest loi)
         	(cons (first loi) (destroy-invaders lom (rest loi))))]))
 
+; This function was almost a direct copy from: https://github.com/djhornsb/space-invaders/blob/master/space-invaders.rkt
 ; struct list -> BOOLEAN
 ; returns true if a specific ufo has been hit and false if not
 ; (define (find-invader i lom))
